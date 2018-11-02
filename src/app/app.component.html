@@ -1,0 +1,42 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <mat-toolbar-row>
+    <div *ngIf="!(isWebOrTablet$ | async)">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+    <div>HN-NG</div>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav class="sidenav" [mode]="(isWebOrTablet$ | async) ? 'side' : 'over'" [opened]="isWebOrTablet$ | async"
+    [disableClose]="isWebOrTablet$ | async" role="navigation">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/stories/new" routerLinkActive="active">
+        <mat-icon matListIcon>autorenew</mat-icon>New
+      </a>
+      <a mat-list-item routerLink="/stories/top" routerLinkActive="active">
+        <mat-icon matListIcon>trending_up</mat-icon>Top
+      </a>
+      <a mat-list-item routerLink="/stories/best" routerLinkActive="active">
+        <mat-icon matListIcon>thumb_up</mat-icon>Best
+      </a>
+      <a mat-list-item routerLink="/stories/ask" routerLinkActive="active">
+        <mat-icon matListIcon>question_answer</mat-icon>Ask
+      </a>
+      <a mat-list-item routerLink="/stories/show" routerLinkActive="active">
+        <mat-icon matListIcon>done</mat-icon>Show
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item>
+        <mat-icon matListIcon>person</mat-icon>Profile
+      </a>
+      <a mat-list-item>
+        <mat-icon matListIcon>settings</mat-icon>Settings
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="sidenav-content" role="main">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

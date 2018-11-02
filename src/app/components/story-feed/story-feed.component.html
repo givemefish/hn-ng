@@ -1,0 +1,22 @@
+<div class="page mat-elevation-z2">
+  <div *ngIf="pages$ | async as pages" class="pagination">
+    <div *ngIf="currentPage$ | async as page">
+      <button mat-button (click)="prevPage()" color="primary" [disabled]="page == 1">
+        <mat-icon>navigate_before</mat-icon>
+      </button>
+      <span>{{ page }} of {{ pages }}</span>
+      <button mat-button (click)="nextPage()" color="primary" [disabled]="page == pages">
+        <mat-icon>navigate_next</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="feed$ | async as feed; else loading">
+    <div *ngFor="let id of items$ | async as items; let isLast = last;" class="feed-item" [ngClass]="{ 'last': isLast }">
+      <app-story-item [itemId]="id"></app-story-item>
+    </div>
+  </div>
+  <ng-template #loading>
+    <!-- <app-loading></app-loading> -->
+  </ng-template>
+
+</div>

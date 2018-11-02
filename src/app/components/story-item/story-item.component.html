@@ -1,0 +1,25 @@
+<div class="story" *ngIf="item$ | async as item" fxLayout="row" fxLayoutGap="10px">
+  <div class="story-point" fxFlex="60px">
+    {{ item.score }} p
+  </div>
+  <div fxFlex>
+    <div class="story-title">
+      <span *ngIf="item.url">
+        <a [href]="item.url" target="_blank">
+          {{ item.title }}
+        </a>
+        <span class="story-url">({{ item.url | domain }})</span>
+      </span>
+      <span *ngIf="!item.url">
+        <a href="javascript:void(0)">
+          {{ item.title }}
+        </a>
+      </span>
+    </div>
+    <div class="story-data">
+      <span class="story-author">by {{ item.by }}</span>
+      <span class="story-time">{{ item.time * 1000 | timeAgo }}</span>
+      <span *ngIf="item.kids">{{ item.kids.length }} comments</span>
+    </div>
+  </div>
+</div>

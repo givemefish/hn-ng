@@ -1,0 +1,36 @@
+.story {
+  font-size: 14px;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.story-point {
+  text-align: right;
+}
+
+.story-title {
+  font-weight: 500;
+}
+
+.story-url {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.story-data {
+  font-size: 0.8rem;
+  color: #aaa;
+  padding-top: 0.5rem;
+
+  > span::after {
+    content: '|';
+    margin: 0 0.5rem;
+  }
+}
