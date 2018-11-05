@@ -1,0 +1,18 @@
+<div *ngIf="!isFetching" class="item-detail-container mat-elevation-z2">
+  <div class="item-detail-header">
+    <div class="item-detail-title">{{ title }}</div>
+    <small *ngIf="url"><a [href]="url">{{ url }}</a></small>
+  </div>
+  <div [innerHTML]="text" class="item-detail-content"></div>
+  <small>
+    <span>{{ score }} P</span>
+    <span> | </span>
+    <span>by {{ by }}</span>
+    <span> | </span>
+    <span>{{ time * 1000 | timeAgo }}</span>
+  </small>
+</div>
+<div>&nbsp;</div>
+<div *ngFor="let comment of kids">
+  <app-story-comments [level]="0" [id]="comment"></app-story-comments>
+</div>

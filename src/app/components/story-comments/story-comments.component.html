@@ -1,0 +1,23 @@
+<div class="comment-container mat-elevation-z2" style="margin: 10px 0">
+  <div class="comment-header" *ngIf="hasCommentTree">
+    <button mat-button *ngIf="(!isActivated && !!kids && kids.length)" (click)="toggleActivate()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-button *ngIf="(isActivated && !!kids && kids.length)" (click)="toggleActivate()">
+      <mat-icon>remove</mat-icon>
+    </button>
+    <span>{{ by }}</span>
+    <span>{{ time * 1000 | timeAgo }}</span>
+  </div>
+  <div [innerHTML]="text" class="comment-content"></div>
+  <small>
+    <span>by {{ by }}</span>
+    <span> | </span>
+    <span>{{ time * 1000 | timeAgo }}</span>
+  </small>
+</div>
+<ng-container *ngIf="isActivated">
+  <div *ngFor="let comment of kids">
+    <app-story-comments [level]="level" [id]="comment"></app-story-comments>
+  </div>
+</ng-container>

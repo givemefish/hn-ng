@@ -16,7 +16,11 @@ export class DataService {
     return this.http.get<number[]>(`${this.apiUrl}/${feedType}.json`);
   }
 
-  getItem(itemId: number) {
+  getItem(itemId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/item/${itemId}.json`);
+  }
+
+  getUser(userId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/user/${userId}.json`);
   }
 }

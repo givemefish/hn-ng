@@ -1,6 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DataService } from '../data.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-story-item',
@@ -9,13 +7,30 @@ import { Observable } from 'rxjs';
 })
 export class StoryItemComponent implements OnInit {
   @Input()
-  itemId: number;
+  index: number;
 
-  item$: Observable<any>;
+  @Input()
+  id: number;
 
-  constructor(private dataSvc: DataService) {}
+  @Input()
+  title: string;
 
-  ngOnInit() {
-    this.item$ = this.dataSvc.getItem(this.itemId);
-  }
+  @Input()
+  by: string;
+
+  @Input()
+  url: string;
+
+  @Input()
+  score: number;
+
+  @Input()
+  time: number;
+
+  @Input()
+  commentsCount: number;
+
+  constructor() {}
+
+  ngOnInit() {}
 }

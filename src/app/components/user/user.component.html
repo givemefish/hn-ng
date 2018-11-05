@@ -1,0 +1,19 @@
+<mat-card *ngIf="userData">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>person</mat-icon>
+    </div>
+    <mat-card-title>
+      {{ userData.id }}
+    </mat-card-title>
+    <mat-card-subtitle>
+      Karma: {{ userData.karma }}
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngIf="userData.about">
+      {{ userData.about }}
+    </div>
+    <!-- <div *ngIf="userData.about" [innerHTML]="userData.about"></div> -->
+  </mat-card-content>
+</mat-card>

@@ -1,25 +1,24 @@
-<div class="story" *ngIf="item$ | async as item" fxLayout="row" fxLayoutGap="10px">
-  <div class="story-point" fxFlex="60px">
-    {{ item.score }} p
+<div class="feed-item">
+  <div class="feed-item-index">
+    <div>{{ index }}</div>
+    <div><small>{{ score }} P</small></div>
   </div>
-  <div fxFlex>
-    <div class="story-title">
-      <span *ngIf="item.url">
-        <a [href]="item.url" target="_blank">
-          {{ item.title }}
-        </a>
-        <span class="story-url">({{ item.url | domain }})</span>
+  <div>
+    <span *ngIf="url">
+      <a [href]="url" target="_blank" rel="noopener" class="feed-item-title">{{ title }}</a>
+      <small> ({{ url | domain }})</small>
+    </span>
+    <span *ngIf="!url">
+      <a [routerLink]="['/stories/item', id]" class="feed-item-title">{{ title }}</a>
+    </span>
+    <div>
+      <span>by <a [routerLink]="['/stories/user', by]">{{ by }}</a></span>
+      <span> | </span>
+      <span>{{ time * 1000 | timeAgo }}</span>
+      <span> | </span>
+      <span>
+        <a [routerLink]="['/stories/item', id]">{{ commentsCount }} comments</a>
       </span>
-      <span *ngIf="!item.url">
-        <a href="javascript:void(0)">
-          {{ item.title }}
-        </a>
-      </span>
-    </div>
-    <div class="story-data">
-      <span class="story-author">by {{ item.by }}</span>
-      <span class="story-time">{{ item.time * 1000 | timeAgo }}</span>
-      <span *ngIf="item.kids">{{ item.kids.length }} comments</span>
     </div>
   </div>
 </div>

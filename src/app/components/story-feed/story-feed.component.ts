@@ -1,48 +1,85 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
-import { switchMap, map } from 'rxjs/operators';
-import { Observable, BehaviorSubject, forkJoin, of } from 'rxjs';
+import { switchMap, map, flatMap, tap } from 'rxjs/operators';
+import { from, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-story-feed',
   templateUrl: './story-feed.component.html',
   styleUrls: ['./story-feed.component.scss']
 })
-export class StoryFeedComponent implements OnInit {
-  feed$: Observable<number[]>;
-  pages$: Observable<number>;
-  items$: Observable<any[]>;
-  currentPage$ = new BehaviorSubject(1);
-  pageSize$ = new BehaviorSubject(12);
-  test: any;
+export class StoryFeedComponent implements OnInit, OnDestroy {
+  public isFetching: boolean;
+  public showPagination: boolean;
+  public feedType: string;
+  public feed: any[];
+  public page: number;
+  public pageSize: number;
+  public totalPages: number;
+  private subscription: Subscription;
 
-  constructor(private route: ActivatedRoute, private dataSvc: DataService) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: Router,
+    private dataSvc: DataService
+  ) {}
 
   ngOnInit() {
-    this.feed$ = this.route.data.pipe(switchMap(data => this.dataSvc.getFeed(data.feed)));
-    this.pages$ = this.feed$.pipe(
-      map(feeds => Math.floor(feeds.length / this.pageSize$.getValue()) + 1)
-    );
-    this.items$ = this.currentPage$.pipe(
-      switchMap(page => {
-        return this.feed$.pipe(
-          map(items =>
-            items.slice(
-              (page - 1) * this.pageSize$.getValue(),
-              (page - 1) * this.pageSize$.getValue() + this.pageSize$.getValue()
+    this.isFetching = false;
+    this.showPagination = false;
+    this.pageSize = 10;
+    this.feedType = this.route.snapshot.data.feedType;
+    this.subscription = this.route.queryParams
+      .pipe(
+        switchMap(params => {
+          this.isFetching = true;
+          this.feed = [];
+          this.page = +params.p || 1;
+          return this.dataSvc
+            .getFeed(this.feedType)
+            .pipe(tap(data => (this.totalPages = Math.ceil(data.length / 30))))
+            .pipe(
+              map(data =>
+                data.slice(
+                  (this.page - 1) * this.pageSize,
+                  (this.page - 1) * this.pageSize + this.pageSize
+                )
+              )
             )
-          )
-        );
-      })
-    );
+            .pipe(flatMap(data => from(data)))
+            .pipe(flatMap(data => this.dataSvc.getItem(data)));
+        })
+      )
+      .subscribe(
+        data => {
+          this.feed.push(data);
+          this.isFetching = false;
+          this.showPagination = true;
+          this.cdRef.detectChanges();
+        },
+        error => console.log(error)
+      );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   prevPage() {
-    this.currentPage$.next(this.currentPage$.value - 1);
+    this.router.navigate([`/stories/${this.feedType}`], {
+      queryParams: {
+        p: Math.max(1, this.page - 1)
+      }
+    });
   }
 
   nextPage() {
-    this.currentPage$.next(this.currentPage$.value + 1);
+    this.router.navigate([`/stories/${this.feedType}`], {
+      queryParams: {
+        p: Math.min(this.totalPages, this.page + 1)
+      }
+    });
   }
 }
